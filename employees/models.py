@@ -23,6 +23,7 @@ class Employee(models.Model):
     name = models.CharField(max_length=100, verbose_name="Nombres")
     position = models.CharField(max_length=100, verbose_name="Cargo")
     join_date = models.DateField(verbose_name="Fecha de Ingreso")
+    termination_date = models.DateField(null=True, blank=True, verbose_name="Fecha de Cese")
     shift_type = models.CharField(max_length=20, choices=SHIFT_TYPES, verbose_name="Tipo de Turno")
     rest_day = models.CharField(max_length=20, choices=REST_DAYS, verbose_name="Día de Descanso")
 
