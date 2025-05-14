@@ -17,14 +17,16 @@ from attendance.models import Attendance
 # Configuración de horarios según el tipo de turno
 SHIFT_SCHEDULES = {
     'turno_1': [
-        ('09:00', '14:00'),  # Mañana
+        ('10:00', '14:00'),  # Mañana
         ('18:00', '22:00')   # Tarde
     ],
-    'turno_continuo': [
-        ('10:00', '18:00')   # Turno continuo
+    'turno_2': [
+        ('10:00', '13:30'),  # Mañana
+        ('14:30', '19:00')   # Tarde
     ],
     'turno_3': [
-        ('14:00', '22:00')   # Turno 3
+        ('13:00', '16:30'),  # Mañana
+        ('17:30', '22:00')   # Tarde
     ]
 }
 
@@ -87,8 +89,8 @@ def generate_attendance_records(start_date, end_date):
 
             try:
                 # Crear el registro de asistencia según el turno
-                if shift_type == 'turno_1':
-                    # Turno 1: Generar un único registro con horarios de mañana y tarde
+                if shift_type in ['turno_1', 'turno_2', 'turno_3']:
+                    # Generar un único registro con horarios de mañana y tarde
                     check_in_morning = random_time(schedules[0][0])
                     check_out_morning = random_time(schedules[0][1])
                     check_in_afternoon = random_time(schedules[1][0])
@@ -102,40 +104,14 @@ def generate_attendance_records(start_date, end_date):
                         check_in_afternoon=check_in_afternoon,
                         check_out_afternoon=check_out_afternoon,
                     )
-                    print(f"Asistencia creada para {employee.name} (Turno 1) el {current_date}")
-
-                elif shift_type == 'turno_continuo':
-                    # Turno Continuo: Generar un registro con horarios de 10:00 a 18:00
-                    check_in = random_time(schedules[0][0])
-                    check_out = random_time(schedules[0][1])
-
-                    Attendance.objects.create(
-                        employee=employee,
-                        date=current_date,
-                        check_in_morning=check_in,
-                        check_out_morning=check_out,
-                    )
-                    print(f"Asistencia creada para {employee.name} (Turno Continuo) el {current_date}")
-
-                elif shift_type == 'turno_3':
-                    # Turno 3: Generar un registro con horarios de 14:00 a 22:00
-                    check_in = random_time(schedules[0][0])
-                    check_out = random_time(schedules[0][1])
-
-                    Attendance.objects.create(
-                        employee=employee,
-                        date=current_date,
-                        check_in_afternoon=check_in,
-                        check_out_afternoon=check_out,
-                    )
-                    print(f"Asistencia creada para {employee.name} (Turno 3) el {current_date}")
+                    print(f"Asistencia creada para {employee.name} ({shift_type}) el {current_date}")
 
             except Exception as e:
                 print(f"Error al crear el registro para {employee.name} el {current_date}: {e}")
         current_date += timedelta(days=1)
 
-# Llamar a la función para generar registros del mes de enero
+# Llamar a la función para generar registros
 generate_attendance_records(
     start_date=datetime(2025, 1, 1).date(),
-    end_date=datetime(2025, 1, 31).date()
+    end_date=datetime(2025, 5, 1).date()
 )

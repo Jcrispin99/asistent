@@ -2,9 +2,9 @@ from django.db import models
 from companies.models import Company
 
 SHIFT_TYPES = [
-    ('turno_1', 'Turno 1 (9:00-14:00 y 18:00-22:00)'),
-    ('turno_continuo', 'Turno Continuo (10:00-18:00)'),
-    ('turno_3', 'Turno 3 (14:00-22:00)'),
+    ('turno_1', 'Turno 1 (10:00-14:00 y 18:00-22:00)'),
+    ('turno_2', 'Turno 2 (10:00-01:30 y 14:30-19:00)'),
+    ('turno_3', 'Turno 3 (13:00-16:30 y 17:30-22:00)'),
 ]
 
 REST_DAYS = [

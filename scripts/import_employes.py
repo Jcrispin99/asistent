@@ -2,6 +2,7 @@ import os
 import sys
 import django
 import pandas as pd
+import random
 from datetime import datetime
 
 # Agregar el directorio raíz del proyecto al PYTHONPATH
@@ -13,6 +14,13 @@ django.setup()
 
 from employees.models import Employee
 from companies.models import Company
+
+# Lista de turnos disponibles
+SHIFT_TYPES = [
+    'turno_1',        # Turno 1 (9:00-14:00 y 18:00-22:00)
+    'turno_2', # Turno Continuo (10:00-18:00)
+    'turno_3'         # Turno 3 (14:00-22:00)
+]
 
 def import_employees_from_excel(file_path):
     """Importa empleados desde un archivo Excel."""
@@ -29,6 +37,9 @@ def import_employees_from_excel(file_path):
         # Iterar sobre las filas del archivo Excel
         for index, row in data.iterrows():
             try:
+                # Asignar un turno aleatorio
+                random_shift = random.choice(SHIFT_TYPES)
+
                 # Crear el empleado
                 Employee.objects.create(
                     company=company,
@@ -38,9 +49,9 @@ def import_employees_from_excel(file_path):
                     join_date=datetime.strptime(row['Fecha de Ingreso'], '%d/%m/%Y').date(),
                     termination_date=datetime.strptime(row['Fecha de Cese'], '%d/%m/%Y').date() if not pd.isna(row.get('Fecha de Cese', None)) else None,
                     rest_day=row['Día de Descanso'],
-                    shift_type='turno_1'  # Turno por defecto
+                    shift_type=random_shift  # Turno aleatorio
                 )
-                print(f"Empleado {row['Nombre']} ({row['DNI']}) creado exitosamente.")
+                print(f"Empleado {row['Nombre']} ({row['DNI']}) creado exitosamente con turno {random_shift}.")
             except Exception as e:
                 print(f"Error al crear el empleado en la fila {index + 2}: {e}")
 
